@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>Small RESTful web service</title>
+</head>
+<body>
+<pre>
+*** RESTful web service ***
+
+Use this endpoint to get token value for all other calls
+
+POST <?= self::url('/login/') ?> - login
+body: { "email": "admin@example.com", "password": "admin" }
+response: 200
+{
+    "success": true,
+    "session_token": "13ab565643fd733ab8c15216f86c72289"
+}
+
+*** Users ***
+
+GET <?= self::url('/users/') ?> - get list of all users
+headers: HTTP_X_TOKEN = "token" (see POST /login/)
+response: 200
+{ "users":[...], "total":15 }
+
+GET <?= self::url('/users/3') ?> - get user with specified id
+headers: HTTP_X_TOKEN = "13ab565643fd733ab8c15216f86c72289" (see POST /login/)
+response: 200
+{
+    "user": {
+        "id": 1,
+        "email": "e-moe@ukr.net"
+    }
+}
+
+POST   <?= self::url('/users/') ?>     - create new
+PUT    <?= self::url('/users/{id}') ?> - create new or update existing
+DELETE <?= self::url('/users/{id}') ?> - delete user with specified id
+headers: HTTP_X_TOKEN = "13ab565643fd733ab8c15216f86c72289" (see POST /login/)
+body: { "email":"e-moe@ukr.net", "password":"123", ... }
+response: 200, 201, 204
+{
+  "success":true,
+  "url":"<?= self::url('/users/{id}') ?>"
+}
+
+*** Validation Errors ***
+
+PUT  <?= self::url('/users/3') ?> - create new or update existing
+POST <?= self::url('/users/') ?>  - create new
+headers: HTTP_X_TOKEN = "token" (see POST /login/)
+body: { "email": "test6@example.com" }
+response: 400
+{ 
+    "errors":
+        [
+            "Missed required field 'password'"
+        ],
+    "total":1
+}
+
+PUT  <?= self::url('/users/3') ?> - create new or update existing
+POST <?= self::url('/users/') ?>  - create new
+headers: HTTP_X_TOKEN = "13ab565643fd733ab8c15216f86c72289" (see POST /login/)
+body: { "email": "notEmail", "password": "test" }
+response: 400
+{
+    "errors":
+        [
+            "Field 'email' must be valid email address"
+        ],
+    "total":1
+}
+
+*** Logs ***
+
+GET <?= self::url('/logs/') ?> - get list of all logs
+headers: HTTP_X_TOKEN = "token" (see POST /login/)
+response: 200
+{ "logs":[...], "total":15 }
+
+DELETE <?= self::url('/logs/') ?> - delete all logs
+headers: HTTP_X_TOKEN = "13ab565643fd733ab8c15216f86c72289" (see POST /login/)
+body: empty
+response: 204 empty
+    </pre>
+</body>
+</html>

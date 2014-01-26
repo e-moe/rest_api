@@ -1,0 +1,11 @@
+<?php
+header('Content-Type: application/json');
+$logs = [];
+foreach ($data as $log) {
+    $logs[] = $log->toArray();
+}
+$response = (object)[
+    'logs' => $logs,
+    'total' => count($data),
+];
+echo json_encode($response);

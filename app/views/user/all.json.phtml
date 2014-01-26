@@ -1,0 +1,15 @@
+<?php
+header('Content-Type: application/json');
+$fieldsToShow = ['id', 'email'];
+$users = [];
+foreach ($data as $user) {
+    $users[] = array_merge(
+        $user->toArray($fieldsToShow),
+        ['url' => self::url('/users/' . $user->id)]
+    );
+}
+$response = (object)[
+    'users' => $users,
+    'total' => count($data),
+];
+echo json_encode($response);

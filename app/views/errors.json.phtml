@@ -1,0 +1,7 @@
+<?php
+header('Content-Type: application/json', true, 400);
+$response = (object)array(
+    'errors' => $data,
+    'total' => count($data),
+);
+echo json_encode($response);
