@@ -1,3 +1,5 @@
+*Live demo*: http://api.labinskiy.org.ua/
+
 Requirements:
 
 1) Apache (virtualhost, mod_rewright)
