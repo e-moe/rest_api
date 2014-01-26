@@ -22,12 +22,13 @@ response: 200
 
 GET <?= self::url('/users/') ?> - get list of all users
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-curl <?= self::url('/users/') ?> -H 'HTTP_X_TOKEN: token'
+$curl <?= self::url('/users/') ?> -H 'HTTP_X_TOKEN: token'
 response: 200
 { "users":[...], "total":15 }
 
 GET <?= self::url('/users/3') ?> - get user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
+$curl <?= self::url('/users/3') ?> -H 'HTTP_X_TOKEN: token'
 response: 200
 {
     "user": {
@@ -79,6 +80,7 @@ response: 400
 
 GET <?= self::url('/logs/') ?> - get list of all logs
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
+$curl <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: token'
 response: 200
 { "logs":[...], "total":15 }
 
