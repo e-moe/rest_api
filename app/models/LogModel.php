@@ -1,11 +1,34 @@
 <?php
 class LogModel extends Model
 {
+    /**
+     * @var int Primary key
+     */
     public $id;
+
+    /**
+     * @var string Timestamp
+     */
     public $timestamp;
+
+    /**
+     * @var string IP address
+     */
     public $ip;
+
+    /**
+     * @var string Endpoint (e.g. /users/123)
+     */
     public $endpoint;
+
+    /**
+     * @var string Session token
+     */
     public $token;
+
+    /**
+     * @var int Response result code
+     */
     public $result;
 
     /**

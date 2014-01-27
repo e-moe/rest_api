@@ -59,14 +59,6 @@ class App
     {
         return $_SERVER['REMOTE_ADDR'];
     }
-    
-    /**
-     * @return string Request uri (e.g. /users/123)
-     */
-    public function getRequestUri()
-    {
-        return str_replace($this->getPublicBaseUrl(), '', $_SERVER['REQUEST_URI']);
-    }
 
     /**
      * Determine public base url for application
@@ -77,9 +69,11 @@ class App
             str_replace(
                 INDEX_PATH,
                 "",
-                $_SERVER['SCRIPT_FILENAME']),
+                $_SERVER['SCRIPT_FILENAME']
+            ),
             "",
-            $_SERVER['SCRIPT_NAME']);
+            $_SERVER['SCRIPT_NAME']
+        );
     }
     
     /**
@@ -88,6 +82,14 @@ class App
     public function getPublicBaseUrl()
     {
         return $this->publicBasePath;
+    }
+
+    /**
+     * @return string Request uri (e.g. /users/123)
+     */
+    public function getRequestUri()
+    {
+        return str_replace($this->getPublicBaseUrl(), '', $_SERVER['REQUEST_URI']);
     }
 
     /**
