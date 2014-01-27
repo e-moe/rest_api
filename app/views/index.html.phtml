@@ -10,25 +10,26 @@
 
 Use this endpoint to get token value for all other calls
 
-POST <?= self::url('/login/') ?> - login
+POST /login/ - login
 body: { "email": "admin@example.com", "password": "admin" }
+$ curl -X POST -d '{ "email":"admin@example.com", "password": "admin" }' <?= self::url('/login/') ?> 
 response: 200
 {
     "success": true,
-    "session_token": "13ab565643fd733ab8c15216f86c72289"
+    "session_token": "{token}"
 }
 
 *** Users ***
 
-GET <?= self::url('/users/') ?> - get list of all users
+GET /users/ - get list of all users
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$curl <?= self::url('/users/') ?> -H 'HTTP_X_TOKEN: token'
+$ curl <?= self::url('/users/') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 { "users":[...], "total":15 }
 
-GET <?= self::url('/users/3') ?> - get user with specified id
+GET /users/{id} - get user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$curl <?= self::url('/users/3') ?> -H 'HTTP_X_TOKEN: token'
+$ curl <?= self::url('/users/{id}') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 {
     "user": {
@@ -37,55 +38,53 @@ response: 200
     }
 }
 
-POST   <?= self::url('/users/') ?>     - create new
-PUT    <?= self::url('/users/{id}') ?> - create new or update existing
-DELETE <?= self::url('/users/{id}') ?> - delete user with specified id
+POST   /users/     - create new
+PUT    /users/{id} - create new or update existing
+DELETE /users/{id} - delete user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-body: { "email":"e-moe@ukr.net", "password":"123", ... }
+body: { "email":"admin@example.com", "password": "admin" }
+$ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 200, 201, 204
 {
   "success":true,
-  "url":"<?= self::url('/users/{id}') ?>"
+  "url":"/users/{id}"
 }
 
 *** Validation Errors ***
 
-PUT  <?= self::url('/users/3') ?> - create new or update existing
-POST <?= self::url('/users/') ?>  - create new
+PUT  /users/{id} - create new or update existing
+POST /users/  - create new
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "test6@example.com" }
+$ curl -X METHOD -d '{ "email": "test6@example.com" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 400
 { 
-    "errors":
-        [
-            "Missed required field 'password'"
-        ],
+    "errors": [ "Missed required field 'password'" ],
     "total":1
 }
 
-PUT  <?= self::url('/users/3') ?> - create new or update existing
-POST <?= self::url('/users/') ?>  - create new
+PUT  /users/3 - create new or update existing
+POST /users/  - create new
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "notEmail", "password": "test" }
+$ curl -X METHOD -d '{ "email": "notEmail", "password": "test" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 400
 {
-    "errors":
-        [
-            "Field 'email' must be valid email address"
-        ],
+    "errors": [ "Field 'email' must be valid email address" ],
     "total":1
 }
 
 *** Logs ***
 
-GET <?= self::url('/logs/') ?> - get list of all logs
+GET /logs/ - get list of all logs
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$curl <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: token'
+$ curl <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 { "logs":[...], "total":15 }
 
-DELETE <?= self::url('/logs/') ?> - delete all logs
+DELETE /logs/ - delete all logs
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
+$ curl -X DELETE <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
 body: empty
 response: 204 empty
     </pre>
