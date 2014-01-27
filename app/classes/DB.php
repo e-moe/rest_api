@@ -60,9 +60,9 @@ class DB
         $params = array_values($values);
         $sql = sprintf(
             'INSERT INTO `%s` (%s) VALUES (%s)',
-                $mysqli->real_escape_string($table),
-                implode(', ', $columns),
-                implode(', ', $placeholders)
+            $mysqli->real_escape_string($table),
+            implode(', ', $columns),
+            implode(', ', $placeholders)
         );
         $stmt->prepare($sql);
         if (count($values)) {
