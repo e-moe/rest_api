@@ -58,7 +58,12 @@ class DB
         );
         $placeholders = array_fill(0, count($values), '?');
         $params = array_values($values);
-        $sql = 'INSERT INTO `' . $mysqli->real_escape_string($table) . '` (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')';
+        $sql = sprintf(
+            'INSERT INTO `%s` (%s) VALUES (%s)',
+                $mysqli->real_escape_string($table),
+                implode(', ', $columns),
+                implode(', ', $placeholders)
+        );
         $stmt->prepare($sql);
         if (count($values)) {
             call_user_func_array(array($stmt, 'bind_param'), $this->prepareParams($params));
