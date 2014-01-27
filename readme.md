@@ -14,15 +14,15 @@ Installation:
 
 2. create new or use existing virtual host:
 
-    NameVirtualHost *:80
-    <VirtualHost *:80>
-        DocumentRoot "path_to_www"
-        ServerName your_server_name
+        NameVirtualHost *:80
+        <VirtualHost *:80>
+            DocumentRoot "path_to_www"
+            ServerName your_server_name
 
-        <Directory "path_to_www">
-          AllowOverride All
-        </Directory>
-    </VirtualHost>
+            <Directory "path_to_www">
+            AllowOverride All
+            </Directory>
+        </VirtualHost>
 
 3. create new db with tables or use existing:
 see dump.sql
