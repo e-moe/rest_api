@@ -8,10 +8,11 @@ class Router
     {
         // get controller and action from request uri
         $parts = $this->parseRequest();
-        list($controller, $action) = $parts;
+        $controller = array_shift($parts);
+        $action = array_shift($parts);
         $controller = mb_convert_case($controller, MB_CASE_TITLE);
         // all other parts - params for action
-        $params = array_slice($parts, 2);
+        $params = $parts;
         $method = static::getHttpMethod();
         $this->executeAction($controller, $action, $params, $method);
     }
