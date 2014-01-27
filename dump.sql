@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `session_token` (`session_token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='API sample project.' AUTO_INCREMENT=52 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='API sample project.';
 
 INSERT INTO `users` (`id`, `email`, `password`, `session_token`, `session_expire`) VALUES
-(1, 'admin@example.com', '$2y$10$3ujtWcwuB6IQbKYNHo1tfOTCLUalnQcdcEDnt.iDcg0no/7tPSLe2', '13ab565643fd733ab8c15216f86c72289', 1390769467);
+(1, 'admin@example.com', '$2y$10$3ujtWcwuB6IQbKYNHo1tfOTCLUalnQcdcEDnt.iDcg0no/7tPSLe2', NULL, NULL);
 
 DROP TABLE IF EXISTS `logs`;
 CREATE TABLE IF NOT EXISTS `logs` (
