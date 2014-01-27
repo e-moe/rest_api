@@ -8,7 +8,17 @@
 <pre>
 *** RESTful web service ***
 
-Use this endpoint to get token value for all other calls
+Response body format: JSON
+
+Endpoints:
+/       - this help
+/login/ - user auth
+/users/ - users list (requires authentication)
+/logs/  - request logs (requires authentication)
+
+To access /users/ and /logs/ you should provide secret token with special HTTP Header: HTTP_X_TOKEN
+
+Use this endpoint to get token value for all other calls:
 
 POST /login/ - login
 body: { "email": "admin@example.com", "password": "admin" }

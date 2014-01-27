@@ -4,7 +4,7 @@
 Requirements:
 
 1) Apache (virtualhost, mod_rewright)
-2) PHP
+2) PHP 5.5
 3) MySQL
 
 Installation:
