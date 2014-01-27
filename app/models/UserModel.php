@@ -1,10 +1,29 @@
 <?php
 class UserModel extends Model
 {
+    /**
+     * @var int Primary key
+     */
     public $id;
+
+    /**
+     * @var string Email address
+     */
     public $email;
+
+    /**
+     * @var string Password hash
+     */
     public $password;
+
+    /**
+     * @var string Session token value
+     */
     public $session_token;
+
+    /**
+     * @var int Session token expire time
+     */
     public $session_expire;
 
     /**
@@ -69,6 +88,11 @@ class UserModel extends Model
         }
     }
 
+    /**
+     * Before save event
+     *
+     * @return bool
+     */
     protected function beforeSave()
     {
         $this->hashPassword();
