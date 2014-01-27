@@ -28,6 +28,7 @@ class SecuredController extends Controller
      */
     public function afterAction($action, $params, $method)
     {
+        parent::afterAction($action, $params, $method);
         $app = App::getInstance();
         $data = [
             'ip' => $app->getClientIp(),
@@ -49,9 +50,8 @@ class SecuredController extends Controller
             if ($user) {
                 if (time() < $user->session_expire) {
                     $user->session_expire = UserModel::renewExpireTime();
-                    if ($user->save()) {
-                        return true;
-                    }
+                    $user->save();
+                    return true;
                 }
             }
         }

@@ -82,6 +82,11 @@ class LogModel extends Model
         ];
     }
 
+    /**
+     * Log provided data
+     * 
+     * @param array $data Associative array of values to be logged
+     */
     public static function log($data)
     {
         $model = new static();

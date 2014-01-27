@@ -33,6 +33,7 @@ class LoginController extends Controller
      */
     public function afterAction($action, $params, $method)
     {
+        parent::afterAction($action, $params, $method);
         $app = App::getInstance();
         $data = [
             'ip' => $app->getClientIp(),

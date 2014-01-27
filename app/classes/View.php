@@ -12,10 +12,11 @@ class View
     {
         $file_path = APP_PATH . '/views/' . $view . $type . '.phtml';
         if (file_exists($file_path) && is_readable($file_path)) {
-            if (is_array($data))
+            if (is_array($data)) {
                 extract($data, EXTR_PREFIX_SAME, 'data');
-            else
+            } else {
                 $data = $data;
+            }
             include $file_path;
             return true;
         }

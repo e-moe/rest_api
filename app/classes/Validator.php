@@ -5,6 +5,7 @@ class Validator
 
     /**
      * Check required fields in given data
+     *
      * @param array $required Array of required field names
      * @param array $data Data for checking
      * @return bool
@@ -23,6 +24,7 @@ class Validator
 
     /**
      * Check field types
+     *
      * @param array $types Array of field types and names: array('{type}' => array('{field name}', ...), ...)
      * @param array $data Data for checking
      * @return bool
@@ -61,6 +63,7 @@ class Validator
 
     /**
      * Get errors
+     * 
      * @return array List of errors
      */
     public function getErrors()
