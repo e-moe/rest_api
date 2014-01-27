@@ -10,9 +10,9 @@ Requirements:
 
 Installation:
 
-* extract files
+1. extract files
 
-* create new or use existing virtual host:
+2. create new or use existing virtual host:
 
     NameVirtualHost *:80
     <VirtualHost *:80>
@@ -24,9 +24,9 @@ Installation:
         </Directory>
     </VirtualHost>
 
-* create new db with tables or use existing:
+3. create new db with tables or use existing:
 see dump.sql
 
-* edit app/configuration.php (DB connection settings)
+4. edit app/configuration.php (DB connection settings)
 
-* open url: / to read REST API documentation or start directly using it: GET /users/
+5. open url: / to read REST API documentation or start directly using it: GET /users/
