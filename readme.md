@@ -1,17 +1,18 @@
 *Live demo*: http://api.labinskiy.org.ua/
+
 *Sources*: https://github.com/e-moe/rest_api
 
 Requirements:
 
-1) Apache (virtualhost, mod_rewright)
-2) PHP 5.5
-3) MySQL
+- Apache (virtualhost, mod_rewright)
+- PHP 5.5
+- MySQL
 
 Installation:
 
-1) extract files
+* extract files
 
-2) create new or use existing virtual host:
+* create new or use existing virtual host:
 
     NameVirtualHost *:80
     <VirtualHost *:80>
@@ -23,9 +24,9 @@ Installation:
         </Directory>
     </VirtualHost>
 
-3) create new db with tables or use existing:
+* create new db with tables or use existing:
 see dump.sql
 
-4) edit app/configuration.php (DB connection settings)
+* edit app/configuration.php (DB connection settings)
 
-5) open url: / to read REST API documentation or start directly using it: GET /users/
+* open url: / to read REST API documentation or start directly using it: GET /users/
