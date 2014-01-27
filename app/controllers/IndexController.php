@@ -3,6 +3,7 @@ class IndexController extends Controller
 {
     /**
      * Action for url /
+     * 
      * @param array $params Request params
      * @param string $method Request method
      */

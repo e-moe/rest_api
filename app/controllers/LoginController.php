@@ -3,6 +3,7 @@ class LoginController extends Controller
 {
     /**
      * Action for url /login/
+     * 
      * @param array $params Request params
      * @param string $method Request method
      */

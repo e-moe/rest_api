@@ -3,6 +3,7 @@ class UsersController extends SecuredController
 {
     /**
      * Action for url /users/
+     *
      * @param array $params Request params
      * @param string $method Request method
      */
@@ -34,6 +35,7 @@ class UsersController extends SecuredController
 
     /**
      * Action for url /users/{userId}/
+     *
      * @param array $params Request params
      * @param string $method Request method
      */
@@ -43,9 +45,9 @@ class UsersController extends SecuredController
         if ('GET' == $method) {
             // load user with specified id
             $user = UserModel::findByPk($id);
-            if (!is_null($user)) { // success
+            if ($user) {
                 $this->render('user/user', $user);
-            } else { // not found
+            } else {
                 $this->error(array("Address with id '$id' does not exists"));
             }
         }
@@ -55,8 +57,8 @@ class UsersController extends SecuredController
             // read and parse PUT data in JSON format
             $data = $jr->parse(file_get_contents('php://input'));
             if (!is_null($data)) { // parsing ok
-                // is user exists?
-                if ($user = UserModel::findByPk($id)) { // user exists, updating it
+                $user = UserModel::findByPk($id);
+                if ($user) { // user exists, updating it
                     $user->populate((array)$data);
                     if ($user->save(true, ['email', 'password'])) { // success
                         $this->render('user/update', $user);
@@ -79,7 +81,7 @@ class UsersController extends SecuredController
 
         if ('DELETE' == $method) {
             // deleting user
-            if (UserModel::deleteByPk($id)) { // success
+            if (UserModel::deleteByPk($id)) {
                 $this->render('user/delete', $id);
             } else {
                 $this->error([

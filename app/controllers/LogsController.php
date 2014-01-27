@@ -4,6 +4,7 @@ class LogsController extends SecuredController
 
     /**
      * Action for url /logs/
+     * 
      * @param array $params Request params
      * @param string $method Request method
      */
