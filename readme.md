@@ -1,4 +1,5 @@
 *Live demo*: http://api.labinskiy.org.ua/
+*Sources*: https://github.com/e-moe/rest_api
 
 Requirements:
 

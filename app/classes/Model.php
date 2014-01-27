@@ -60,7 +60,8 @@ abstract class Model
     abstract public function getUniqueFields();
 
     /**
-     * 
+     * Finds a single row with the specified condition.
+     *
      * @param string $condition Where SQL condition
      * @param array $params List of parameters
      * @return Model|null
@@ -79,7 +80,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Finds all rows with the specified condition.
+     *
      * @param string $condition Where SQL condition
      * @param array $params List of parameters
      * @return Model[]
@@ -101,7 +103,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Finds a row record with the specified primary key.
+     *
      * @param int $pk
      * @return Model|null
      */
@@ -111,6 +114,8 @@ abstract class Model
     }
     
     /**
+     * Deletes corresponding row.
+     *
      * @return bool
      */
     public function delete()
@@ -125,7 +130,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Deletes rows with the specified condition.
+     *
      * @param string $condition Where SQL condition
      * @param array $params List of parameters
      * @return int The number of rows deleted
@@ -143,7 +149,8 @@ abstract class Model
     }
 
     /**
-     * 
+     * Deletes row with the specified primary key.
+     *
      * @param int $pk
      * @return boolean
      */
@@ -157,7 +164,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Populates record with the given attributes.
+     *
      * @param array $data
      * @return Model
      */
@@ -176,7 +184,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Get record's array representation
+     *
      * @return array Associative array representation of current model 
      */
     public function toArray($attributes = null)
@@ -192,18 +201,29 @@ abstract class Model
         return $arr;
     }
 
+    /**
+     * Before save event
+     *
+     * @return bool
+     */
     protected function beforeSave()
     {
         return true;
     }
-    
+
+    /**
+     * After save event
+     *
+     * @return bool
+     */
     protected function afterSave()
     {
         return true;
     }
 
     /**
-     * 
+     * Saves the current record.
+     *
      * @param bool $runValidation Whether to perform validation before saving the record
      * @param array|null $attributes List of attributes that need to be saved
      */
@@ -224,7 +244,8 @@ abstract class Model
     }
     
     /**
-     * 
+     * Inserts a row into the table based on this record attributes.
+     *
      * @param array|null $attributes List of attributes that need to be saved
      * @return bool
      */
@@ -242,6 +263,12 @@ abstract class Model
         return $inserted > 0;
     }
     
+    /**
+     * Check current record attributes to be unique per table
+     * 
+     * @param array|null $attributes Attributes list to check
+     * @return bool
+     */
     protected function checkUnique($attributes = null)
     {
         $uniqueFields = $this->getUniqueFields();
@@ -274,7 +301,8 @@ abstract class Model
     }
 
     /**
-     * 
+     * Updates the row represented by this record.
+     *
      * @param array|null $attributes List of attributes that need to be saved
      * @return bool
      */
