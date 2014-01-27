@@ -12,8 +12,7 @@ abstract class Model
     protected $isNewRecord = true;
     
     /**
-     * 
-     * @return bool
+     * @return bool Is new record or existing
      */
     public function getIsNewRecord()
     {
@@ -21,7 +20,6 @@ abstract class Model
     }
     
     /**
-     * 
      * @param bool $value
      * @return Model
      */
@@ -63,8 +61,8 @@ abstract class Model
 
     /**
      * 
-     * @param string $condition
-     * @param array $params
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
      * @return Model|null
      */
     public static function find($condition = '', array $params = [])
@@ -82,8 +80,8 @@ abstract class Model
     
     /**
      * 
-     * @param string $condition
-     * @param array $params
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
      * @return Model[]
      */
     public static function findAll($condition = '', array $params = [])
@@ -128,8 +126,8 @@ abstract class Model
     
     /**
      * 
-     * @param string $condition
-     * @param array $params
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
      * @return int The number of rows deleted
      */
     public static function deleteAll($condition = '', array $params = [])
@@ -316,6 +314,7 @@ abstract class Model
 
     /**
      * Get errors
+     * 
      * @return array List of errors
      */
     public function getErrors()

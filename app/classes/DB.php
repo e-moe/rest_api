@@ -6,8 +6,16 @@ class DB
      * @var mysqli
      */
     protected $link = null;
+
+    /**
+     * @var bool Connection status
+     */
     protected $connected = false;
-    protected static $instance; // object instance
+
+    /**
+     * @var DB Object instance
+     */
+    protected static $instance;
 
     private function __construct()
     {
@@ -22,8 +30,12 @@ class DB
     }
     private function __clone() {}
     private function __wakeup() {}
+
+    /**
+     * @return DB Get object instance
+     */
     public static function getInstance()
-    { // returns single class instance. @return DB
+    {
         if (is_null(self::$instance)) {
             self::$instance = new DB;
         }
@@ -65,9 +77,11 @@ class DB
     
     /**
      * Update SQL query
+     *
      * @param string $table Table name
      * @param array $values Associative array of values
-     * @param string $where WHERE SQL clause
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
      * @return int Num of updated rows
      */
     public function update($table, $values, $condition = '', array $params = [])
@@ -97,7 +111,8 @@ class DB
     /**
      * Delete SQL query
      * @param string $table Table name
-     * @param string $where WHERE SQL clause
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
      * @return int Num of deleted rows
      */
     public function delete($table, $condition = '', array $params = [])
@@ -122,8 +137,9 @@ class DB
      * Select SQL query
      * @param string $table Table name
      * @param array $columns Array of column names
-     * @param string $where WHERE SQL clause
-     * @return mixed Selected rows
+     * @param string $condition Where SQL condition
+     * @param array $params List of parameters
+     * @return array Selected rows
      */
     public function select($table, $columns = array('*'), $condition = '', array $params = [])
     {
@@ -148,7 +164,11 @@ class DB
         return $this->getAssocResults($stmt);
     }
     
-    protected function getAssocResults($stmt)
+    /**
+     * @param mysqli_stmt $stmt
+     * @return array
+     */
+    protected function getAssocResults(mysqli_stmt $stmt)
     {
         $result = [];
         $row = [];
@@ -170,6 +190,7 @@ class DB
 
     /**
      * Create array of references from array of values for bind_param function
+     *
      * @param array $params Array of values
      * @return array Array of references
      */

@@ -1,4 +1,8 @@
 <?php
+/**
+ * This controller performs token value check before each call.
+ * If token value is wrong 401 'Access denied' response will be generated.
+ */
 class SecuredController extends Controller
 {
     const ACCESS_TOKEN_HEADER_NAME = 'HTTP_X_TOKEN';
@@ -55,6 +59,11 @@ class SecuredController extends Controller
         return false;
     }
     
+    /**
+     * Get access token for current request
+     * 
+     * @return string|null Access Token
+     */
     protected function getAccessToken()
     {
         $app = App::getInstance();

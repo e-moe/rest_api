@@ -3,6 +3,7 @@ class View
 {
     /**
      * Render specified view with given data
+     *
      * @param string $view View name
      * @param mixed $data Data to render in view
      * @return bool
@@ -25,6 +26,7 @@ class View
     
     /**
      * Create absolute URL from relative
+     *
      * @param string $url Relative url
      * @return string Absolute url
      */
@@ -34,8 +36,4 @@ class View
         return "http://" . $_SERVER['SERVER_NAME'] . $app->getPublicBaseUrl() . $url;
     }
     
-    static public function filterData($data, $whiteList)
-    {
-        return array_intersect_key($data, array_flip($whiteList));
-    }
 }

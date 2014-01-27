@@ -5,8 +5,9 @@ class JsonRequest
 
     /**
      * Parse request string in JSON format
+     *
      * @param string $request Request string
-     * @return stdClass|null Parsed data object or NULL
+     * @return mixed|null Parsed data object or NULL
      */
     public function parse($request)
     {
@@ -41,6 +42,7 @@ class JsonRequest
 
     /**
      * Get errors
+     * 
      * @return array List of errors
      */
     public function getErrors()

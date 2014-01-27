@@ -5,9 +5,15 @@ include_once dirname(__FILE__) . '/autoloader.php';
 
 class App
 {
-    protected static $instance; // object instance
+    /**
+     * @var App object instance
+     */
+    protected static $instance;
 
-    protected $publicBasePath = ''; // base url for application
+    /**
+     * @var string Base url for application
+     */
+    protected $publicBasePath = '';
 
     private function __construct()
     {
@@ -54,6 +60,9 @@ class App
         return $_SERVER['REMOTE_ADDR'];
     }
     
+    /**
+     * @return string Request uri (e.g. /users/123)
+     */
     public function getRequestUri()
     {
         return str_replace($this->getPublicBaseUrl(), '', $_SERVER['REQUEST_URI']);
@@ -73,6 +82,9 @@ class App
             $_SERVER['SCRIPT_NAME']);
     }
     
+    /**
+     * @return string Public folder base url
+     */
     public function getPublicBaseUrl()
     {
         return $this->publicBasePath;
@@ -80,6 +92,7 @@ class App
 
     /**
      * Render error and show message
+     * 
      * @param int $code
      * @param string $msg
      * @param bool $die Die or not

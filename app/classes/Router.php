@@ -13,8 +13,6 @@ class Router
         // all other parts - params for action
         $params = array_slice($parts, 2);
         $method = static::getHttpMethod();
-
-        
         $this->executeAction($controller, $action, $params, $method);
     }
     
