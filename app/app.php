@@ -3,69 +3,39 @@ include_once dirname(__FILE__) . '/configuration.php';
 include_once dirname(__FILE__) . '/defines.php';
 include_once dirname(__FILE__) . '/autoloader.php';
 
-class App
+class App extends DIContainer
 {
-    /**
-     * @var App object instance
-     */
-    protected static $instance;
 
     /**
      * @var string Base url for application
      */
     protected $publicBasePath = '';
 
-    private function __construct()
-    {
-        $this->initPublicBaseUrl();
-    }
 
-    private function __clone() {}
-    private function __wakeup() {}
-
-    /**
-     * Get App instance
-     * @return App
-     */
-    public static function getInstance()
-    { // returns single class instance.
-        if (is_null(self::$instance)) {
-            self::$instance = new App;
-        }
-        return self::$instance;
-    }
 
     /**
      * Run application
      */
     public function run()
     {
-        $router = new Router();
-        $router->route();
+        $this->initPublicBaseUrl();
+        $this['router'] = function($app) { return new Router($app); };
+        $this['controllerFactory'] = function($app) { return new ControllerFactory($app); };
+        $this['jsonParser'] = function($app) { return new JsonParser($app);};
+        $this['request'] = function($app) { return new Request($app); };
+        $this['response'] = function($app) { return new Response($app); };
+        $this['view'] = function($app) { return new View($app); };
+        $this['router']->route();
     }
 
-    /**
-     * @return array Associative array of all the HTTP headers for the current request
-     */
-    public function getHeaders()
-    {
-        return getallheaders();
-    }
     
-    /**
-     * @return string Client IP addr
-     */
-    public function getClientIp()
-    {
-        return $_SERVER['REMOTE_ADDR'];
-    }
 
     /**
      * Determine public base url for application
      */
     protected function initPublicBaseUrl()
     {
-        $this->publicBasePath = str_replace(
+        $this['publicBaseUrl'] = str_replace(
             str_replace(
                 INDEX_PATH,
                 "",
@@ -76,38 +46,4 @@ class App
         );
     }
     
-    /**
-     * @return string Public folder base url
-     */
-    public function getPublicBaseUrl()
-    {
-        return $this->publicBasePath;
-    }
-
-    /**
-     * @return string Request uri (e.g. /users/123)
-     */
-    public function getRequestUri()
-    {
-        return str_replace($this->getPublicBaseUrl(), '', $_SERVER['REQUEST_URI']);
-    }
-
-    /**
-     * Render error and show message
-     * 
-     * @param int $code
-     * @param string $msg
-     * @param bool $die Die or not
-     */
-    public function error($code, $msg = '', $die = true)
-    {
-        $file = intval($code) . '.php';
-        $file_path = APP_PATH . '/errors/' . $file;
-        if (file_exists($file_path) && is_readable($file_path)) {
-            include_once $file_path;
-        }
-        if ($die) {
-            die;
-        }
-    }
 }

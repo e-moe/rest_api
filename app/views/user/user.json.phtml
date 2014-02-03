@@ -1,7 +1,0 @@
-<?php
-header('Content-Type: application/json');
-$fieldsToShow = ['id', 'email'];
-$response = (object)array(
-    'user' => $data->toArray($fieldsToShow),
-);
-echo json_encode($response);

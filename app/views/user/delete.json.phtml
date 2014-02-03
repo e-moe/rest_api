@@ -1,7 +1,0 @@
-<?php
-header('Content-Type: application/json');
-$response = (object)array(
-    'success' => true,
-    'url' => self::url('/users/' . $data)
-);
-echo json_encode($response);

@@ -4,11 +4,10 @@ class IndexController extends Controller
     /**
      * Action for url /
      * 
-     * @param array $params Request params
-     * @param string $method Request method
+     * @param Request $request
      */
-    public function actionIndex($params, $method)
+    public function actionGetIndex(Request $request)
     {
-        $this->render('index', null, '.html');
+        return $this->renderView('index');
     }
 }

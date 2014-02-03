@@ -1,38 +1,69 @@
 <?php
-class UsersController extends SecuredController
+class UsersController extends Controller
 {
     /**
-     * Action for url /users/
-     *
-     * @param array $params Request params
-     * @param string $method Request method
+     * Before action event
+     * 
+     * @param string $action Action name
+     * @param Request $request
+     * @return bool 
      */
-    public function actionIndex($params, $method)
+    public function beforeAction($action, Request $request)
     {
-        if ('GET' == $method) {
-            // load and render list of all users
-            $users = UserModel::findAll();
-            $this->render('user/all', $users);
+        if (!$request->getIsValid()) {
+            /**
+             * @var Response
+             */
+            $response = $this->app['response'];
+            $errors = $request->getErrors();
+            $data = (object)[
+                'errors' => $errors,
+                'total' => count($errors),
+            ];
+            $response->setBody($this->json($data, 400));
         }
-        if ('POST' == $method) {
-            $jr = new JsonRequest();
-            // read and parse POST data in JSON format
-            $data = $jr->parse(file_get_contents('php://input'));
-            if (!is_null($data)) { // parsing ok
-                // creating new user
-                $user = new UserModel();
-                $user->populate((array)$data);
-                if ($user->save(true, ['email', 'password'])) { // success
-                    $this->render('user/create', $user);
-                } else { // errors
-                    $this->error($user->getErrors());
-                }
-            } else { // error during parsing input JSON data
-                $this->error($jr->getErrors());
-            }
-        }
+        return $request->getIsValid();
     }
-
+    
+    /**
+     * Action for url /users/
+     * 
+     * @param Request $request
+     */
+    public function actionGetIndex(Request $request)
+    {
+        $users = UserModel::findAll();
+        $data = (object)[
+            'users' => $users,
+            'total' => count($users),
+        ];
+        return $this->json($data);
+    }
+    
+    /**
+     * Action for url /users/
+     * 
+     * @param Request $request
+     */
+    public function actionPostIndex(Request $request)
+    {
+        $user = new UserModel();
+        $user->populate((array)$request->getInput());
+        if (!$user->save(true, ['email', 'password'])) { // success
+            $errors = $user->getErrors();
+            $data = (object)[
+                'errors' => $errors,
+                'total' => count($errors),
+            ];
+            return $this->json($data, 400);
+        }
+        $data = (object)[
+            'success' => true,
+            'url' => $this->view->url('/users/' . $user->id),
+        ];
+        return $this->json($data, 201);
+    }
+    
     /**
      * Action for url /users/{userId}/
      *

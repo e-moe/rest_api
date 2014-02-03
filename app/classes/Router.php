@@ -1,50 +1,55 @@
 <?php
-class Router
+class Router extends DIAble
 {
     /**
      * Serve requested url - parse params, run correspond action, controller...
      */
     public function route()
     {
+        $request = $this->app['request'];         
         // get controller and action from request uri
-        $parts = $this->parseRequest();
+        $parts = $this->parseRequest($request);
         $controller = array_shift($parts);
         $action = array_shift($parts);
         $controller = mb_convert_case($controller, MB_CASE_TITLE);
         // all other parts - params for action
         $params = $parts;
-        $method = static::getHttpMethod();
-        $this->executeAction($controller, $action, $params, $method);
+        $this->executeAction($controller, $action, $params);
     }
     
     /**
      * Execute requested action
      * 
-     * @param string $controller Controller name
+     * @param string $controllerName Controller name
      * @param string $action Action name
      * @param array $params Request params
      * @param string $method Request method
      */
-    protected function executeAction($controller, $action, $params, $method)
+    protected function executeAction($controllerName, $action, $params)
     {
+        $request = $this->app['request']; 
+        $response = $this->app['response'];
+        $method = $request->getHttpMethod();
         // Add suffixes in controller and action names
-        $controllerClass = ($controller ?: 'Index') . 'Controller';
-        $actionFunction = 'action' . ($action ?: 'Index');
-        if (class_exists($controllerClass)) {
-            $controller = new $controllerClass;
+        $controllerClass = ($controllerName ?: 'Index') . 'Controller';
+        $actionFunction = 'action' . mb_convert_case($method, MB_CASE_TITLE) . ($action ?: 'Index');
+        try {
+            $controller = $this->app['controllerFactory']->getController($controllerClass);
             // check action in controller
             if (!method_exists($controller, $actionFunction)) { // action not found, run default action
                 array_unshift($params, $action);
                 $actionFunction = 'defaultAction';
             }
-            if ($controller->beforeAction($actionFunction, $params, $method)) {
-                $controller->$actionFunction($params, $method);
+            if ($controller->beforeAction($actionFunction, $request)) {
+                $html = $controller->$actionFunction($request);
+                $response->setBody($html);
             }
-            $controller->afterAction($actionFunction, $params, $method);
-        } else {
+            $controller->afterAction($actionFunction, $request);
+        } catch (InvalidArgumentException $e) {
             // controller not found, 404 HTTP error
-            App::getInstance()->error(404);
+            $this->app->error(404);
         }
+        $response->send();
     }
 
     /**
@@ -52,11 +57,9 @@ class Router
      * 
      * @return array Parts of request uri
      */
-    protected function parseRequest()
+    protected function parseRequest(Request $request)
     {
-        $app = App::getInstance();
-        $request = str_replace($app->getPublicBaseUrl(), '', $_SERVER['REQUEST_URI']);
-        $parts = explode('/', $request);
+        $parts = explode('/', $request->getUri());
         array_shift($parts);
         return $parts;
     }

@@ -1,28 +1,46 @@
 <?php
-class View
+class View extends DIAble
 {
-    /**
-     * Render specified view with given data
-     *
-     * @param string $view View name
-     * @param mixed $data Data to render in view
-     * @return bool
-     */
-    static public function render($view, $data = null, $type = '')
+    protected $templateName = '';
+    protected $data = null;
+    
+    public function getData()
     {
-        $file_path = APP_PATH . '/views/' . $view . $type . '.phtml';
+        return $this->data;
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function setTempleate($templateName)
+    {
+        $this->templateName = $templateName;
+    }
+
+    /**
+     * Render view with given data
+     *
+     * @param mixed $data Data to render in view
+     * @return string
+     */
+    public function render($data = null)
+    {
+        $this->setData($data);
+        $file_path = APP_PATH . '/views/' . $this->templateName . '.phtml';
         if (file_exists($file_path) && is_readable($file_path)) {
             if (is_array($data)) {
                 extract($data, EXTR_PREFIX_SAME, 'data');
-            } else {
-                $data = $data;
             }
+            ob_start();
             include $file_path;
-            return true;
+            $out = ob_get_contents();
+            ob_end_clean();
+            return $out;
         }
-        $app = App::getInstance();
-        $app->error(500, "View '$view' not found");
-        return false;
+        $this->app->error(500, "View '$view' not found");
     }
     
     /**
@@ -31,10 +49,10 @@ class View
      * @param string $url Relative url
      * @return string Absolute url
      */
-    static public function url($url)
+    public function url($url)
     {
-        $app = App::getInstance();
-        return "http://" . $_SERVER['SERVER_NAME'] . $app->getPublicBaseUrl() . $url;
+        $app = $this->app;
+        return "http://" . $_SERVER['SERVER_NAME'] . $app['publicBaseUrl'] . $url;
     }
     
 }

@@ -22,7 +22,7 @@ Use this endpoint to get token value for all other calls:
 
 POST /login/ - login
 body: { "email": "admin@example.com", "password": "admin" }
-$ curl -X POST -d '{ "email":"admin@example.com", "password": "admin" }' <?= self::url('/login/') ?> 
+$ curl -X POST -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/login/') ?> 
 response: 200
 {
     "success": true,
@@ -33,13 +33,13 @@ response: 200
 
 GET /users/ - get list of all users
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= self::url('/users/') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl <?= $this->url('/users/') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 { "users":[...], "total":15 }
 
 GET /users/{id} - get user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= self::url('/users/{id}') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl <?= $this->url('/users/{id}') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 {
     "user": {
@@ -53,7 +53,7 @@ PUT    /users/{id} - create new or update existing
 DELETE /users/{id} - delete user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email":"admin@example.com", "password": "admin" }
-$ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 200, 201, 204
 {
   "success":true,
@@ -66,7 +66,7 @@ PUT  /users/{id} - create new or update existing
 POST /users/  - create new
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "test6@example.com" }
-$ curl -X METHOD -d '{ "email": "test6@example.com" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email": "test6@example.com" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 400
 { 
     "errors": [ "Missed required field 'password'" ],
@@ -77,7 +77,7 @@ PUT  /users/3 - create new or update existing
 POST /users/  - create new
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "notEmail", "password": "test" }
-$ curl -X METHOD -d '{ "email": "notEmail", "password": "test" }' <?= self::url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email": "notEmail", "password": "test" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
 response: 400
 {
     "errors": [ "Field 'email' must be valid email address" ],
@@ -88,13 +88,13 @@ response: 400
 
 GET /logs/ - get list of all logs
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl <?= $this->url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 { "logs":[...], "total":15 }
 
 DELETE /logs/ - delete all logs
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl -X DELETE <?= self::url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl -X DELETE <?= $this->url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
 body: empty
 response: 204 empty
     </pre>

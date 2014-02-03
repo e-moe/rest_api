@@ -1,50 +1,69 @@
 <?php
-abstract class Controller
+abstract class Controller extends DIAble
 {
     /**
-     * Render specified view with given data
-     * 
-     * @param string $view View name
-     * @param mixed $data Data to render in view
-     * @param string $type Response view type
-     * @return bool
+     * @var View
      */
-    public function render($view, $data = null, $type = '.json')
+    protected $view = null;
+    public function __construct(\App $app)
     {
-        return View::render($view, $data, $type);
+        parent::__construct($app);
+        $this->view = $app['view'];
+    }
+
+        /**
+     * 
+     * @param mixed $data
+     * @param int $responseCode
+     * @return string
+     */
+    public function json($data = null, $responseCode = 200)
+    {
+        /**
+         * @var Response
+         */
+        $response = $this->app['response'];
+        $response->setHeader('Content-Type', 'application/json');
+        $response->setCode($responseCode);
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
     
     /**
-     * Render errors
      * 
-     * @param array $errors List of errors
+     * @param string $viewName
+     * @param mixed $data
+     * @return string
      */
-    public function error($errors)
+    public function renderView($viewName, $data = null)
     {
-        $this->render('errors', $errors);
+        $view = $this->app['view'];
+        $view->setTempleate($viewName);
+        return $view->render($data);
     }
 
     /**
      * Default action
      * 
-     * @param array $params Request params
-     * @param string $method Request method
+     * @param Request $request
      */
-    public function defaultAction($params, $method)
+    public function defaultAction(Request $request)
     {
-        $app = App::getInstance();
-        $app->error(404);
+         /**
+         * @var Response
+         */
+        $response = $this->app['response'];
+        $response->setCode(404);
+        return $this->renderView('error/404', $request->getUri() . ' - can not be found.');
     }
     
     /**
      * Before action event
      * 
      * @param string $action Action name
-     * @param array $params Request params
-     * @param string $method Request method
+     * @param Request $request
      * @return bool 
      */
-    public function beforeAction($action, $params, $method)
+    public function beforeAction($action, Request $request)
     {
         return true;
     }
@@ -53,10 +72,9 @@ abstract class Controller
      * After action event
      * 
      * @param string $action Action name
-     * @param array $params Request params
-     * @param string $method Request method
+     * @param Request $request
      */
-    public function afterAction($action, $params, $method)
+    public function afterAction($action, Request $request)
     {
         
     }

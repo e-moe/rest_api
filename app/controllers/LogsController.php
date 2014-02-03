@@ -1,5 +1,5 @@
 <?php
-class LogsController extends SecuredController
+class LogsController extends Controller
 {
 
     /**
