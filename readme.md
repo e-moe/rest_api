@@ -5,6 +5,7 @@
 * Response status codes and headers fix
 * Routing config (see app/config.php)
 * Parse params from route into action (e.g. /users/**{id}** -> func userGetAction(Request $request, **$id**)
+* HTTP method name in action -> func user**Get**Action(...)
 * Controller trait (for json)
 * Location header in response for create, update actions..
 * Removed login, access tokens, logs
