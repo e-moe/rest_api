@@ -6,12 +6,9 @@ class UsersController extends Controller
      */
     private $usersProvider;
     
-    /**
-     * @param App $app
-     */
-    public function __construct(App $app)
+    public function __construct(App $app, Response $response, View $view)
     {
-        parent::__construct($app);
+        parent::__construct($app, $response, $view);
         $this->usersProvider = $this->app['usersProvider'];
     }
 
@@ -25,8 +22,9 @@ class UsersController extends Controller
     public function beforeAction($action, Request $request)
     {
         if (!$request->getIsValid()) {
-            $response = $this->app['response'];
-            $response->setBody($this->jsonList('errors', $request->getErrors(), Response::HTTP_BAD_REQUEST));
+            $this->getRespose()->setBody(
+                $this->jsonList('errors', $request->getErrors(), Response::HTTP_BAD_REQUEST)
+            );
         }
         return $request->getIsValid();
     }
@@ -55,8 +53,8 @@ class UsersController extends Controller
             return $this->jsonList('errors', $user->getErrors(), Response::HTTP_BAD_REQUEST);
         }
         $url = $this->view->url('/users/' . $user->id);
-        $this->app['response']->setCode(Response::HTTP_CREATED);
-        $this->app['response']->setHeader('Location', $url);
+        $this->response->setCode(Response::HTTP_CREATED);
+        $this->response->setHeader('Location', $url);
     }
     
     /**
@@ -109,7 +107,7 @@ class UsersController extends Controller
             throw new NotFoundException();
         }
         $user->delete();
-        $this->app['response']->setCode(Response::HTTP_NO_CONTENT);
+        $this->response->setCode(Response::HTTP_NO_CONTENT);
     }
     
     /**
@@ -124,14 +122,14 @@ class UsersController extends Controller
         $user = $this->usersProvider->findByPk($id);
         if (!$user) {
             $user = $this->usersProvider->create();
-            $this->app['response']->setCode(Response::HTTP_CREATED);
+            $this->response->setCode(Response::HTTP_CREATED);
         }
         $user->populate((array)$request->getInput());
         if (!$user->save(true, ['email', 'password'])) {
            return $this->jsonList('errors', $user->getErrors(), Response::HTTP_BAD_REQUEST);
         }
         $url = $this->view->url('/users/' . $user->id);
-        $this->app['response']->setHeader('Location', $url);
+        $this->response->setHeader('Location', $url);
     }
     
     /**

@@ -23,7 +23,7 @@ class ControllerFactory extends AppAware
             if (!in_array('Controller', $parents)) {
                 throw new InvalidArgumentException(sprintf('Class "%s" is not Controller.', $controllerClass));
             }
-            $this->controllers[$controllerClass] = new $controllerClass($this->app);
+            $this->controllers[$controllerClass] = new $controllerClass($this->app, $this->app['response'], $this->app['view']);
         }
         return $this->controllers[$controllerClass];
     }

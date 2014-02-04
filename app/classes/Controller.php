@@ -8,10 +8,33 @@ abstract class Controller extends AppAware
      */
     protected $view = null;
     
-    public function __construct(App $app)
+    /**
+     * @var Response
+     */
+    protected $response = null;
+
+
+    public function __construct(App $app, Response $response, View $view)
     {
         parent::__construct($app);
-        $this->view = $app['view'];
+        $this->response = $response;
+        $this->view = $view;
+    }
+
+    /**
+     * @return Response
+     */
+    protected function getRespose()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @return View
+     */
+    protected function getView()
+    {
+        return $this->view;
     }
 
     /**
