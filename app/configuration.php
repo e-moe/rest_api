@@ -6,5 +6,4 @@ $_APP_CONFIG = array(
     'db_user'  => 'api_levi9_user',
     'db_pass'  => 'password',
     'db_base'  => 'api_levi9',
-    'sission_lifetime' => 60*30, // seconds
 );
