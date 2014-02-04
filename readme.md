@@ -4,8 +4,9 @@
 * Request and Response objects
 * Response status codes and headers fix
 * Routing config (see app/config.php)
-* controller trait (for json)
+* Controller trait (for json)
 * Location header in response for create, update actions..
+* Removed login, access tokens, logs
 
 *Live demo*: http://api.labinskiy.org.ua/
 
