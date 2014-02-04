@@ -1,3 +1,12 @@
+### Update (Feb 4, 2014) ###
+
+* Dependency Injection
+* Request and Response objects
+* Response status codes and headers fix
+* Routing config (see app/config.php)
+* controller trait (for json)
+* Location header in response for create, update actions..
+
 *Live demo*: http://api.labinskiy.org.ua/
 
 *Sources*: https://github.com/e-moe/rest_api/tree/feature/levi9
