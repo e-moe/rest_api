@@ -11,10 +11,7 @@ trait JsonControllerTrait
      */
     public function json($data = null, $responseCode = Response::HTTP_OK)
     {
-        /**
-         * @var Response
-         */
-        $response = $this->app['response'];
+        $response = $this->getResponse();
         $response->setHeader('Content-Type', 'application/json');
         $response->setCode($responseCode);
         return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

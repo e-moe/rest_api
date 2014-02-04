@@ -24,7 +24,7 @@ abstract class Controller extends AppAware
     /**
      * @return Response
      */
-    protected function getRespose()
+    protected function getResponse()
     {
         return $this->response;
     }

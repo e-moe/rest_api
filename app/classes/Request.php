@@ -28,7 +28,7 @@ class Request extends AppAware
         if (in_array($this->getHttpMethod(), ['POST', 'PUT'])) {
             $requestBody = file_get_contents('php://input');
             try {
-                $data = $app['jsonParser']->parse($requestBody);
+                $data = $app['inputParser']->parse($requestBody);
                 $this->setInput($data);
             } catch (Exception $e) {
                 $this->addError($e->getMessage());

@@ -13,7 +13,7 @@ class App extends DIContainer
         $this->initPublicBaseUrl();
         
         $this['db'] = function($app) { return new DB($app, $app['config']['db']); };
-        $this['jsonParser'] = function($app) { return new JsonParser($app); };
+        $this['inputParser'] = function($app) { return new JsonParser($app); };
         $this['request'] = function($app) { return new Request($app); };
         $this['response'] = function($app) { return new Response($app); };
         $this['controllerFactory'] = function($app) { return new ControllerFactory($app); };

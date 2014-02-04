@@ -22,7 +22,7 @@ class UsersController extends Controller
     public function beforeAction($action, Request $request)
     {
         if (!$request->getIsValid()) {
-            $this->getRespose()->setBody(
+            $this->getResponse()->setBody(
                 $this->jsonList('errors', $request->getErrors(), Response::HTTP_BAD_REQUEST)
             );
         }
