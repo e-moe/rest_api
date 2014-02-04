@@ -14,14 +14,12 @@ Response body format: JSON
 *** Users ***
 
 GET /users/ - get list of all users
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= $this->url('/users/') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl <?= $this->url('/users/') ?> 
 response: 200
 { "users":[...], "total":15 }
 
 GET /users/{id} - get user with specified id
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= $this->url('/users/{id}') ?> -H 'HTTP_X_TOKEN: {token}'
+$ curl <?= $this->url('/users/{id}') ?> 
 response: 200
 {
     "id": 1,
@@ -32,9 +30,8 @@ response: 200
 POST   /users/     - create new
 PUT    /users/{id} - create new or update existing
 DELETE /users/{id} - delete user with specified id
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email":"admin@example.com", "password": "admin" }
-$ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/users/{id}') ?>  
 response: 200, 201, 204, 400, 404
 headers: Location
 
@@ -42,9 +39,8 @@ headers: Location
 
 PUT  /users/{id} - create new or update existing
 POST /users/  - create new
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "test6@example.com" }
-$ curl -X METHOD -d '{ "email": "test6@example.com" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email": "test6@example.com" }' <?= $this->url('/users/{id}') ?>  
 response: 400
 { 
     "errors": [ "Missed required field 'password'" ],
@@ -53,9 +49,8 @@ response: 400
 
 PUT  /users/3 - create new or update existing
 POST /users/  - create new
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email": "notEmail", "password": "test" }
-$ curl -X METHOD -d '{ "email": "notEmail", "password": "test" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
+$ curl -X METHOD -d '{ "email": "notEmail", "password": "test" }' <?= $this->url('/users/{id}') ?> 
 response: 400
 {
     "errors": [ "Field 'email' must be valid email address" ],
