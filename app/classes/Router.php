@@ -5,14 +5,15 @@ class Router
     protected $request;
     protected $response;
     protected $controllerFactory;
+    protected $routs;
 
-
-    public function __construct(App $app, Request $request, Response $response, ControllerFactory $controllerFactory)
+    public function __construct(App $app, Request $request, Response $response, ControllerFactory $controllerFactory, array $routs = [])
     {
         $this->app = $app;
         $this->request = $request;
         $this->response = $response;
         $this->controllerFactory = $controllerFactory;
+        $this->routs = $routs;
     }
 
     /**
@@ -64,12 +65,6 @@ class Router
         array_shift($parts);
         return $parts;
     }
-
-    protected $routs = [
-        '/'             => ['IndexController' => 'indexAction'],
-        '/users/'       => ['UsersController' => 'list{method}Action'],
-        '/users/{id}/'  => ['UsersController' => 'user{method}Action'],
-    ];
     
     protected function getPathRegExp($path)
     {

@@ -9,7 +9,7 @@ trait JsonControllerTrait
      * @param int $responseCode
      * @return string
      */
-    public function json($data = null, $responseCode = 200)
+    public function json($data = null, $responseCode = Response::HTTP_OK)
     {
         /**
          * @var Response
@@ -28,7 +28,7 @@ trait JsonControllerTrait
      * @param int $responseCode
      * @return string
      */
-    public function jsonList($name, $list, $responseCode = 200)
+    public function jsonList($name, $list, $responseCode = Response::HTTP_OK)
     {
         $data = (object)[
             $name => $list,
@@ -42,6 +42,10 @@ trait JsonControllerTrait
      */
     public function jsonMethodNotAllowd()
     {
-        return $this->jsonList('errors', ['This method is now allowed here'], 405);
+        return $this->jsonList(
+            'errors',
+            ['This method is now allowed here'],
+            Response::HTTP_METHOD_NOT_ALLOWED
+        );
     }
 }

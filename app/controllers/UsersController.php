@@ -26,7 +26,7 @@ class UsersController extends Controller
     {
         if (!$request->getIsValid()) {
             $response = $this->app['response'];
-            $response->setBody($this->jsonList('errors', $request->getErrors(), 400));
+            $response->setBody($this->jsonList('errors', $request->getErrors(), Response::HTTP_BAD_REQUEST));
         }
         return $request->getIsValid();
     }
@@ -52,10 +52,10 @@ class UsersController extends Controller
         $user = $this->usersProvider->create();
         $user->populate((array)$request->getInput());
         if (!$user->save(true, ['email', 'password'])) { // success
-            return $this->jsonList('errors', $user->getErrors(), 400);
+            return $this->jsonList('errors', $user->getErrors(), Response::HTTP_BAD_REQUEST);
         }
         $url = $this->view->url('/users/' . $user->id);
-        $this->app['response']->setCode(201);
+        $this->app['response']->setCode(Response::HTTP_CREATED);
         $this->app['response']->setHeader('Location', $url);
     }
     
@@ -109,7 +109,7 @@ class UsersController extends Controller
             throw new NotFoundException();
         }
         $user->delete();
-        $this->app['response']->setCode(204);
+        $this->app['response']->setCode(Response::HTTP_NO_CONTENT);
     }
     
     /**
@@ -124,11 +124,11 @@ class UsersController extends Controller
         $user = $this->usersProvider->findByPk($id);
         if (!$user) {
             $user = $this->usersProvider->create();
-            $this->app['response']->setCode(201);
+            $this->app['response']->setCode(Response::HTTP_CREATED);
         }
         $user->populate((array)$request->getInput());
         if (!$user->save(true, ['email', 'password'])) {
-           return $this->jsonList('errors', $user->getErrors(), 400);
+           return $this->jsonList('errors', $user->getErrors(), Response::HTTP_BAD_REQUEST);
         }
         $url = $this->view->url('/users/' . $user->id);
         $this->app['response']->setHeader('Location', $url);

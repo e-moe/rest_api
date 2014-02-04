@@ -12,11 +12,10 @@ class DB extends AppAware
      */
     protected $connected = false;
 
-    public function __construct(App $app)
+    public function __construct(App $app, array $config)
     {
         parent::__construct($app);
-        global $_APP_CONFIG;
-        $this->link = new mysqli($_APP_CONFIG['db_host'], $_APP_CONFIG['db_user'], $_APP_CONFIG['db_pass'], $_APP_CONFIG['db_base']);
+        $this->link = new mysqli($config['host'], $config['user'], $config['pass'], $config['base']);
         /* check connection */
         if ($this->link->connect_errno) {
             App::getInstance()->error(500, 'DB error: ' . $this->link->connect_error);
