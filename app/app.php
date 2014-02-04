@@ -5,14 +5,6 @@ include_once dirname(__FILE__) . '/autoloader.php';
 
 class App extends DIContainer
 {
-
-    /**
-     * @var string Base url for application
-     */
-    protected $publicBasePath = '';
-
-
-
     /**
      * Run application
      */
@@ -25,15 +17,13 @@ class App extends DIContainer
         $this['request'] = function($app) { return new Request($app); };
         $this['response'] = function($app) { return new Response($app); };
         $this['controllerFactory'] = function($app) { return new ControllerFactory($app); };
-        $this['router'] = function($app) { return new Router($app, $app['request'], $app['response'], $this['controllerFactory']); };
+        $this['router'] = function($app) { return new Router($app, $app['request'], $app['response'], $app['controllerFactory']); };
         $this['view'] = function($app) { return new View($app); };
         $this['validator'] = function($app) { return new Validator($app); };
         $this['usersProvider'] = function($app) { return new ModelsProvider($app, 'UserModel', $app['db']); };
         
         $this['router']->route();
     }
-
-    
 
     /**
      * Determine public base url for application
