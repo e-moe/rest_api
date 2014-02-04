@@ -19,12 +19,17 @@ class App extends DIContainer
     public function run()
     {
         $this->initPublicBaseUrl();
-        $this['router'] = function($app) { return new Router($app); };
-        $this['controllerFactory'] = function($app) { return new ControllerFactory($app); };
-        $this['jsonParser'] = function($app) { return new JsonParser($app);};
+        
+        $this['db'] = function($app) { return new DB($app); };
+        $this['jsonParser'] = function($app) { return new JsonParser($app); };
         $this['request'] = function($app) { return new Request($app); };
         $this['response'] = function($app) { return new Response($app); };
+        $this['controllerFactory'] = function($app) { return new ControllerFactory($app); };
+        $this['router'] = function($app) { return new Router($app, $app['request'], $app['response'], $this['controllerFactory']); };
         $this['view'] = function($app) { return new View($app); };
+        $this['validator'] = function($app) { return new Validator($app); };
+        $this['usersProvider'] = function($app) { return new ModelsProvider($app, 'UserModel', $app['db']); };
+        
         $this['router']->route();
     }
 

@@ -1,5 +1,5 @@
 <?php
-class Validator
+class Validator extends AppAware
 {
     protected $errors = array();
 

@@ -1,5 +1,5 @@
 <?php
-class View extends DIAble
+class View extends AppAware
 {
     protected $templateName = '';
     protected $data = null;

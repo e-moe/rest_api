@@ -1,6 +1,6 @@
 <?php
 
-class DB
+class DB extends AppAware
 {
     /**
      * @var mysqli
@@ -12,13 +12,9 @@ class DB
      */
     protected $connected = false;
 
-    /**
-     * @var DB Object instance
-     */
-    protected static $instance;
-
-    private function __construct()
+    public function __construct(App $app)
     {
+        parent::__construct($app);
         global $_APP_CONFIG;
         $this->link = new mysqli($_APP_CONFIG['db_host'], $_APP_CONFIG['db_user'], $_APP_CONFIG['db_pass'], $_APP_CONFIG['db_base']);
         /* check connection */
@@ -27,19 +23,6 @@ class DB
         } else {
             $this->connected = true;
         }
-    }
-    private function __clone() {}
-    private function __wakeup() {}
-
-    /**
-     * @return DB Get object instance
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new DB;
-        }
-        return self::$instance;
     }
 
     /**

@@ -2,7 +2,21 @@
 class UsersController extends Controller
 {
     /**
-     * Before action event
+     * @var ModelsProvider
+     */
+    private $usersProvider;
+    
+    /**
+     * @param App $app
+     */
+    public function __construct(App $app)
+    {
+        parent::__construct($app);
+        $this->usersProvider = $this->app['usersProvider'];
+    }
+
+    /**
+     * Before action event, check input body
      * 
      * @param string $action Action name
      * @param Request $request
@@ -11,115 +25,124 @@ class UsersController extends Controller
     public function beforeAction($action, Request $request)
     {
         if (!$request->getIsValid()) {
-            /**
-             * @var Response
-             */
             $response = $this->app['response'];
-            $errors = $request->getErrors();
-            $data = (object)[
-                'errors' => $errors,
-                'total' => count($errors),
-            ];
-            $response->setBody($this->json($data, 400));
+            $response->setBody($this->jsonList('errors', $request->getErrors(), 400));
         }
         return $request->getIsValid();
     }
     
     /**
-     * Action for url /users/
+     * Action for GET /users/
      * 
      * @param Request $request
      */
-    public function actionGetIndex(Request $request)
+    public function listGetAction(Request $request)
     {
-        $users = UserModel::findAll();
-        $data = (object)[
-            'users' => $users,
-            'total' => count($users),
-        ];
-        return $this->json($data);
+        $users = $this->usersProvider->findAll();
+        return $this->jsonList('users', $users);
     }
     
     /**
-     * Action for url /users/
+     * Action for POST /users/
      * 
      * @param Request $request
      */
-    public function actionPostIndex(Request $request)
+    public function listPostAction(Request $request)
     {
-        $user = new UserModel();
+        $user = $this->usersProvider->create();
         $user->populate((array)$request->getInput());
         if (!$user->save(true, ['email', 'password'])) { // success
-            $errors = $user->getErrors();
-            $data = (object)[
-                'errors' => $errors,
-                'total' => count($errors),
-            ];
-            return $this->json($data, 400);
+            return $this->jsonList('errors', $user->getErrors(), 400);
         }
-        $data = (object)[
-            'success' => true,
-            'url' => $this->view->url('/users/' . $user->id),
-        ];
-        return $this->json($data, 201);
+        $url = $this->view->url('/users/' . $user->id);
+        $this->app['response']->setCode(201);
+        $this->app['response']->setHeader('Location', $url);
     }
     
     /**
-     * Action for url /users/{userId}/
-     *
-     * @param array $params Request params
-     * @param string $method Request method
+     * Action for PUT /users/
+     * 
+     * @param Request $request
      */
-    public function defaultAction($params, $method)
+    public function listPutAction(Request $request)
     {
-        $id = intval($params[0]); // get ID from request params
-        if ('GET' == $method) {
-            // load user with specified id
-            $user = UserModel::findByPk($id);
-            if ($user) {
-                $this->render('user/user', $user);
-            } else {
-                $this->error(array("Address with id '$id' does not exists"));
-            }
+        return $this->jsonMethodNotAllowd();
+    }
+    
+    /**
+     * Action for DELETE /users/
+     * 
+     * @param Request $request
+     */
+    public function listDeleteAction(Request $request)
+    {
+        return $this->jsonMethodNotAllowd();
+    }
+    
+    /**
+     * Action for GET /users/{id}
+     * 
+     * @param Request $request
+     * @param string $id User id
+     */
+    public function userGetAction(Request $request, $id)
+    {
+        $id = intval($id);
+        $user = $this->usersProvider->findByPk($id);
+        if (!$user) {
+            throw new NotFoundException();
         }
-
-        if ('PUT' == $method) {
-            $jr = new JsonRequest();
-            // read and parse PUT data in JSON format
-            $data = $jr->parse(file_get_contents('php://input'));
-            if (!is_null($data)) { // parsing ok
-                $user = UserModel::findByPk($id);
-                if ($user) { // user exists, updating it
-                    $user->populate((array)$data);
-                    if ($user->save(true, ['email', 'password'])) { // success
-                        $this->render('user/update', $user);
-                    } else {
-                        $this->error($user->getErrors());
-                    }
-                } else { // user not exists, creating new
-                    $user = new UserModel();
-                    $user->populate((array)$data);
-                    if ($user->save(true, ['email', 'password'])) { // success
-                        $this->render('user/create', $user);
-                    } else {
-                        $this->error($user->getErrors());
-                    }
-                }
-            } else { // error during parsing input JSON data
-                $this->error($jr->getErrors());
-            }
+        return $this->json($user);
+    }
+    
+    /**
+     * Action for DELETE /users/{id}
+     * 
+     * @param Request $request
+     * @param string $id User id
+     */
+    public function userDeleteAction(Request $request, $id)
+    {
+        $id = intval($id);
+        $user = $this->usersProvider->findByPk($id);
+        if (!$user) {
+            throw new NotFoundException();
         }
-
-        if ('DELETE' == $method) {
-            // deleting user
-            if (UserModel::deleteByPk($id)) {
-                $this->render('user/delete', $id);
-            } else {
-                $this->error([
-                    sprintf('Can\'t remove user with id = %d', $id)
-                ]);
-            }
+        $user->delete();
+        $this->app['response']->setCode(204);
+    }
+    
+    /**
+     * Action for PUT /users/{id}
+     * 
+     * @param Request $request
+     * @param string $id User id
+     */
+    public function userPutAction(Request $request, $id)
+    {
+        $id = intval($id);
+        $user = $this->usersProvider->findByPk($id);
+        if (!$user) {
+            $user = $this->usersProvider->create();
+            $this->app['response']->setCode(201);
         }
+        $user->populate((array)$request->getInput());
+        if (!$user->save(true, ['email', 'password'])) {
+           return $this->jsonList('errors', $user->getErrors(), 400);
+        }
+        $url = $this->view->url('/users/' . $user->id);
+        $this->app['response']->setHeader('Location', $url);
+    }
+    
+    /**
+     * Action for POST /users/{id}
+     * 
+     * @param Request $request
+     * @param string $id User id
+     */
+    public function userPostAction(Request $request, $id)
+    {
+        return $this->jsonMethodNotAllowd();
     }
 
 }

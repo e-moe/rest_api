@@ -1,12 +1,13 @@
 <?php
 
-class Request extends DIAble
+class Request extends AppAware
 {
     protected $input = null;
+    protected $params = [];
     protected $isValid = true;
     protected $errors = [];
 
-    public function __construct(\App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
         if (in_array($this->getHttpMethod(), ['POST', 'PUT'])) {
@@ -60,7 +61,17 @@ class Request extends DIAble
         return $this;
     }
 
-    
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    public function setParams($params)
+    {
+        $this->params = $params;
+        return $this;
+    }
+
     /**
      * @return array Associative array of all the HTTP headers for the current request
      */
@@ -92,6 +103,8 @@ class Request extends DIAble
      */
     public function getUri()
     {
-        return str_replace($this->app['publicBaseUrl'], '', $_SERVER['REQUEST_URI']);
+        $uri = str_replace($this->app['publicBaseUrl'], '', $_SERVER['REQUEST_URI']);
+        // add trailing slash
+        return $uri . (substr($uri, -1) !== '/' ? '/' : '');
     }
 }

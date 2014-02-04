@@ -1,5 +1,5 @@
 <?php
-class JsonParser extends DIAble
+class JsonParser extends AppAware
 {
     /**
      * Parse request string in JSON format

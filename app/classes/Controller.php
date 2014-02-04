@@ -1,33 +1,19 @@
 <?php
-abstract class Controller extends DIAble
+abstract class Controller extends AppAware
 {
+    use JsonControllerTrait;
+    
     /**
      * @var View
      */
     protected $view = null;
-    public function __construct(\App $app)
+    
+    public function __construct(App $app)
     {
         parent::__construct($app);
         $this->view = $app['view'];
     }
 
-        /**
-     * 
-     * @param mixed $data
-     * @param int $responseCode
-     * @return string
-     */
-    public function json($data = null, $responseCode = 200)
-    {
-        /**
-         * @var Response
-         */
-        $response = $this->app['response'];
-        $response->setHeader('Content-Type', 'application/json');
-        $response->setCode($responseCode);
-        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    }
-    
     /**
      * 
      * @param string $viewName
@@ -41,21 +27,6 @@ abstract class Controller extends DIAble
         return $view->render($data);
     }
 
-    /**
-     * Default action
-     * 
-     * @param Request $request
-     */
-    public function defaultAction(Request $request)
-    {
-         /**
-         * @var Response
-         */
-        $response = $this->app['response'];
-        $response->setCode(404);
-        return $this->renderView('error/404', $request->getUri() . ' - can not be found.');
-    }
-    
     /**
      * Before action event
      * 

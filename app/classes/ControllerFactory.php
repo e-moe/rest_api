@@ -1,7 +1,15 @@
 <?php
-class ControllerFactory extends DIAble
+class ControllerFactory extends AppAware
 {
     protected $controllers = [];
+    
+    /**
+     * Controller Factory
+     * 
+     * @param string $controllerClass
+     * @return Controller
+     * @throws InvalidArgumentException
+     */
     public function getController($controllerClass)
     {
         if (!class_exists($controllerClass)) {

@@ -10,24 +10,6 @@
 
 Response body format: JSON
 
-Endpoints:
-/       - this help
-/login/ - user auth
-/users/ - users list (requires authentication)
-/logs/  - request logs (requires authentication)
-
-To access /users/ and /logs/ you should provide secret token with special HTTP Header: HTTP_X_TOKEN
-
-Use this endpoint to get token value for all other calls:
-
-POST /login/ - login
-body: { "email": "admin@example.com", "password": "admin" }
-$ curl -X POST -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/login/') ?> 
-response: 200
-{
-    "success": true,
-    "session_token": "{token}"
-}
 
 *** Users ***
 
@@ -42,10 +24,9 @@ headers: HTTP_X_TOKEN = "token" (see POST /login/)
 $ curl <?= $this->url('/users/{id}') ?> -H 'HTTP_X_TOKEN: {token}'
 response: 200
 {
-    "user": {
-        "id": 1,
-        "email": "e-moe@ukr.net"
-    }
+    "id": 1,
+    "email": "admin@example.com",
+    "password": "admin"
 }
 
 POST   /users/     - create new
@@ -54,11 +35,8 @@ DELETE /users/{id} - delete user with specified id
 headers: HTTP_X_TOKEN = "token" (see POST /login/)
 body: { "email":"admin@example.com", "password": "admin" }
 $ curl -X METHOD -d '{ "email":"admin@example.com", "password": "admin" }' <?= $this->url('/users/{id}') ?>  -H 'HTTP_X_TOKEN: {token}'
-response: 200, 201, 204
-{
-  "success":true,
-  "url":"/users/{id}"
-}
+response: 200, 201, 204, 400, 404
+headers: Location
 
 *** Validation Errors ***
 
@@ -83,20 +61,6 @@ response: 400
     "errors": [ "Field 'email' must be valid email address" ],
     "total":1
 }
-
-*** Logs ***
-
-GET /logs/ - get list of all logs
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl <?= $this->url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
-response: 200
-{ "logs":[...], "total":15 }
-
-DELETE /logs/ - delete all logs
-headers: HTTP_X_TOKEN = "token" (see POST /login/)
-$ curl -X DELETE <?= $this->url('/logs/') ?> -H 'HTTP_X_TOKEN: {token}'
-body: empty
-response: 204 empty
     </pre>
 </body>
 </html>

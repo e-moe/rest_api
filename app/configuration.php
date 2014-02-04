@@ -3,8 +3,8 @@ $_APP_CONFIG = array(
     'app_path' => '/app',
     'www_path' => '/www',
     'db_host'  => 'localhost',
-    'db_user'  => 'db_api_user',
+    'db_user'  => 'api_levi9_user',
     'db_pass'  => 'password',
-    'db_base'  => 'api',
+    'db_base'  => 'api_levi9',
     'sission_lifetime' => 60*30, // seconds
 );

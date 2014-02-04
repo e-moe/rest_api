@@ -1,55 +1,56 @@
 <?php
-class Router extends DIAble
+class Router
 {
+    protected $app;
+    protected $request;
+    protected $response;
+    protected $controllerFactory;
+
+
+    public function __construct(App $app, Request $request, Response $response, ControllerFactory $controllerFactory)
+    {
+        $this->app = $app;
+        $this->request = $request;
+        $this->response = $response;
+        $this->controllerFactory = $controllerFactory;
+    }
+
     /**
      * Serve requested url - parse params, run correspond action, controller...
      */
     public function route()
     {
-        $request = $this->app['request'];         
-        // get controller and action from request uri
-        $parts = $this->parseRequest($request);
-        $controller = array_shift($parts);
-        $action = array_shift($parts);
-        $controller = mb_convert_case($controller, MB_CASE_TITLE);
-        // all other parts - params for action
-        $params = $parts;
-        $this->executeAction($controller, $action, $params);
+        try {
+            $out = $this->execute();
+            $this->response->setBody($out);
+        } catch (NotFoundException $ex) {
+            $this->response->setCode($ex->getCode());
+        }
+        $this->response->send();
     }
     
-    /**
-     * Execute requested action
-     * 
-     * @param string $controllerName Controller name
-     * @param string $action Action name
-     * @param array $params Request params
-     * @param string $method Request method
-     */
-    protected function executeAction($controllerName, $action, $params)
+    protected function execute()
     {
-        $request = $this->app['request']; 
-        $response = $this->app['response'];
-        $method = $request->getHttpMethod();
-        // Add suffixes in controller and action names
-        $controllerClass = ($controllerName ?: 'Index') . 'Controller';
-        $actionFunction = 'action' . mb_convert_case($method, MB_CASE_TITLE) . ($action ?: 'Index');
-        try {
-            $controller = $this->app['controllerFactory']->getController($controllerClass);
-            // check action in controller
-            if (!method_exists($controller, $actionFunction)) { // action not found, run default action
-                array_unshift($params, $action);
-                $actionFunction = 'defaultAction';
-            }
-            if ($controller->beforeAction($actionFunction, $request)) {
-                $html = $controller->$actionFunction($request);
-                $response->setBody($html);
-            }
-            $controller->afterAction($actionFunction, $request);
-        } catch (InvalidArgumentException $e) {
-            // controller not found, 404 HTTP error
-            $this->app->error(404);
+        $matchedRoute = $this->matchRoute();
+        if (!$matchedRoute) {
+            throw new NotFoundException($this->request->getUri());
         }
-        $response->send();
+        $controllerClass = key($matchedRoute);
+        $actionName = reset($matchedRoute);
+        $controller = $this->controllerFactory->getController($controllerClass);
+        $action = $this->prepareActionName($controller, $actionName);
+        $out = '';
+        if ($controller->beforeAction($action, $this->request)) {
+            $params = $this->getParamsForAction();
+            $out = call_user_method_array($action, $controller, $params);
+        }
+        $controller->afterAction($action, $this->request);
+        return $out;
+    }
+
+    protected function getParamsForAction()
+    {
+        return array_merge([$this->request], $this->request->getParams());
     }
 
     /**
@@ -63,15 +64,43 @@ class Router extends DIAble
         array_shift($parts);
         return $parts;
     }
+
+    protected $routs = [
+        '/'             => ['IndexController' => 'indexAction'],
+        '/users/'       => ['UsersController' => 'list{method}Action'],
+        '/users/{id}/'  => ['UsersController' => 'user{method}Action'],
+    ];
     
-    /**
-     * Get HTTP request method (e.g. GET, POST, ... )
-     * 
-     * @return string
-     */
-    public static function getHttpMethod()
+    protected function getPathRegExp($path)
     {
-        return $_SERVER['REQUEST_METHOD'];
+        return sprintf(
+            '|^%s$|u',
+            preg_replace('/\{[^\/]+?\}/u', '([^\/]+?)', $path)
+        );
+    }
+    
+    protected function prepareActionName(Controller $controller, $actionName)
+    {
+        $method = mb_convert_case($this->request->getHttpMethod(), MB_CASE_TITLE);
+        $action = str_replace('{method}', $method, $actionName);
+        if (!method_exists($controller, $action)) {
+            throw new NotFoundException($this->request->getUri());
+        }
+        return $action;
+    }
+
+    protected function matchRoute()
+    {
+        $uri = $this->request->getUri();
+        foreach ($this->routs as $path => $settings) {
+            $regExp = $this->getPathRegExp($path);
+            if (preg_match($regExp, $uri, $matches)) {
+                $params = array_slice($matches, 1);
+                $this->request->setParams($params);
+                return $settings;
+            }
+        }
+        return false;
     }
 
 }

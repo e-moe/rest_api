@@ -6,7 +6,7 @@ class IndexController extends Controller
      * 
      * @param Request $request
      */
-    public function actionGetIndex(Request $request)
+    public function indexAction(Request $request)
     {
         return $this->renderView('index');
     }

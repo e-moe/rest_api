@@ -1,6 +1,6 @@
 <?php
 
-class Response extends DIAble
+class Response extends AppAware
 {
     /**
      * @var string
