@@ -7,6 +7,7 @@
 * Controller trait (for json)
 * Location header in response for create, update actions..
 * Removed login, access tokens, logs
+* ModelsProvider and ControllerFactory
 
 *Live demo*: http://api.labinskiy.org.ua/
 
