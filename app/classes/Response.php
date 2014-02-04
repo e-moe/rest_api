@@ -10,21 +10,22 @@ class Response extends AppAware
     const HTTP_METHOD_NOT_ALLOWED = 405;
 
     /**
-     * @var string
+     * @var string Response body
      */
     protected $body = '';
     
     /**
-     * @var int
+     * @var int Respose code
      */
     protected $code = self::HTTP_OK;
     
     /**
-     * @var array
+     * @var array Respose headers
      */
     protected $headers = [];
     
     /**
+     * Set response code
      * 
      * @return string
      */
@@ -34,6 +35,7 @@ class Response extends AppAware
     }
 
     /**
+     * Get response code
      * 
      * @return int
      */
@@ -43,6 +45,7 @@ class Response extends AppAware
     }
 
     /**
+     * Get all response headers
      * 
      * @return array
      */
@@ -52,6 +55,7 @@ class Response extends AppAware
     }
     
     /**
+     * Get specific response header
      * 
      * @param string $name
      * @return string|null
@@ -65,6 +69,7 @@ class Response extends AppAware
     }
 
     /**
+     * Set response body
      * 
      * @param string $body
      * @return Response
@@ -76,6 +81,7 @@ class Response extends AppAware
     }
 
     /**
+     * Set reqponse code
      * 
      * @param int $code
      * @return Response
@@ -87,6 +93,7 @@ class Response extends AppAware
     }
 
     /**
+     * Set header values
      * 
      * @param array $headers
      * @return Response
@@ -98,6 +105,7 @@ class Response extends AppAware
     }
     
     /**
+     * Set specific header value
      * 
      * @param string $name
      * @param string $value
@@ -109,6 +117,9 @@ class Response extends AppAware
         return $this;
     }
 
+    /**
+     * Send response headers
+     */
     protected function sendHeaders()
     {
         foreach ($this->headers as $name => $value) {
@@ -116,6 +127,9 @@ class Response extends AppAware
         }
     }
 
+    /**
+     * Send response data to user
+     */
     public function send()
     {
         $this->sendHeaders();

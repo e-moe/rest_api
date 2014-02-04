@@ -18,10 +18,9 @@ class DB extends AppAware
         $this->link = new mysqli($config['host'], $config['user'], $config['pass'], $config['base']);
         /* check connection */
         if ($this->link->connect_errno) {
-            App::getInstance()->error(500, 'DB error: ' . $this->link->connect_error);
-        } else {
-            $this->connected = true;
+            throw new Exception('DB error: ' . $this->link->connect_error, 500);
         }
+        $this->connected = true;
     }
 
     /**

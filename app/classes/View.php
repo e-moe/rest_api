@@ -1,20 +1,43 @@
 <?php
 class View extends AppAware
 {
+    /**
+     * @var string View template name
+     */
     protected $templateName = '';
+    
+    /**
+     * @var mixed View data
+     */
     protected $data = null;
     
+    /**
+     * Get view data
+     * 
+     * @return mixed
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * Set view data
+     * 
+     * @param mixed $data
+     * @return \View
+     */
     public function setData($data)
     {
         $this->data = $data;
         return $this;
     }
 
+    /**
+     * Set view template
+     * 
+     * @param string $templateName
+     */
     public function setTempleate($templateName)
     {
         $this->templateName = $templateName;
@@ -31,16 +54,14 @@ class View extends AppAware
         $this->setData($data);
         $file_path = APP_PATH . '/views/' . $this->templateName . '.phtml';
         if (file_exists($file_path) && is_readable($file_path)) {
-            if (is_array($data)) {
-                extract($data, EXTR_PREFIX_SAME, 'data');
-            }
+            $this->setData($data);
             ob_start();
             include $file_path;
             $out = ob_get_contents();
             ob_end_clean();
             return $out;
         }
-        $this->app->error(500, "View '$view' not found");
+        throw new Exception("View '$this->templateName' not found", 500);
     }
     
     /**

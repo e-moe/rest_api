@@ -17,7 +17,7 @@ class Router
     }
 
     /**
-     * Serve requested url - parse params, run correspond action, controller...
+     * Serve requested url - run correspond action, return response data
      */
     public function route()
     {
@@ -30,6 +30,12 @@ class Router
         $this->response->send();
     }
     
+    /**
+     * Execute controller->action and return content
+     * 
+     * @return string Content
+     * @throws NotFoundException
+     */
     protected function execute()
     {
         $matchedRoute = $this->matchRoute();
@@ -49,23 +55,23 @@ class Router
         return $out;
     }
 
+    /**
+     * Merge reques and all parameters from request
+     * 
+     * @return array Parameters for action call
+     */
     protected function getParamsForAction()
     {
         return array_merge([$this->request], $this->request->getParams());
     }
 
+
     /**
-     * Parse request uri to parts
+     * Generate regexp for routing matching
      * 
-     * @return array Parts of request uri
+     * @param string $path
+     * @return string
      */
-    protected function parseRequest(Request $request)
-    {
-        $parts = explode('/', $request->getUri());
-        array_shift($parts);
-        return $parts;
-    }
-    
     protected function getPathRegExp($path)
     {
         return sprintf(
@@ -74,6 +80,15 @@ class Router
         );
     }
     
+    
+    /**
+     * Check action existance and add method name
+     * 
+     * @param Controller $controller
+     * @param string $actionName
+     * @return string
+     * @throws NotFoundException
+     */
     protected function prepareActionName(Controller $controller, $actionName)
     {
         $method = mb_convert_case($this->request->getHttpMethod(), MB_CASE_TITLE);
@@ -84,6 +99,11 @@ class Router
         return $action;
     }
 
+    /**
+     * Match request uri for possible routes
+     * 
+     * @return array|false Settings for matched route (controller name and acton)
+     */
     protected function matchRoute()
     {
         $uri = $this->request->getUri();

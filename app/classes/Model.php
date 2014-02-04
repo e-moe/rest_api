@@ -1,8 +1,19 @@
 <?php
 abstract class Model extends AppAware
 {
+    /**
+     * @var ModelsProvider
+     */
     protected $provider = null;
+    
+    /**
+     * @var Validator
+     */
     protected $validator = null;
+    
+    /**
+     * @var DB
+     */
     protected $db = null;
 
     /**
@@ -23,7 +34,7 @@ abstract class Model extends AppAware
         $this->validator = $validator;
     }
 
-        /**
+    /**
      * @return bool Is new record or existing
      */
     public function getIsNewRecord()
@@ -71,8 +82,6 @@ abstract class Model extends AppAware
      */
     abstract public function getUniqueFields();
 
-    
-    
     /**
      * Populates record with the given attributes.
      *

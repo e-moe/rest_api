@@ -2,7 +2,14 @@
 
 class ModelsProvider extends AppAware
 {
+    /**
+     * @var string
+     */
     protected $modelClass;
+    
+    /**
+     * @var DB
+     */
     protected $db;
 
     public function __construct(App $app, $modelClass, DB $db)
@@ -15,16 +22,27 @@ class ModelsProvider extends AppAware
         $this->db = $db;
     }
     
+    /**
+     * Creates model
+     * 
+     * @return Model
+     */
     public function create()
     {
         return new $this->modelClass($this->app, $this->db, $this, $this->app['validator']);
     }
     
+    /**
+     * @return string Table name
+     */
     public function tableName()
     {
         return call_user_func($this->modelClass .'::tableName');
     }
     
+    /**
+     * @return string Primary key
+     */
     public function primaryKey()
     {
         return call_user_func($this->modelClass .'::primaryKey');

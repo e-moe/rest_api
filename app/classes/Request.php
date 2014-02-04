@@ -2,9 +2,24 @@
 
 class Request extends AppAware
 {
+    /**
+     * @var mixed Input data of POST/PUT requests
+     */
     protected $input = null;
+    
+    /**
+     * @var array Request params
+     */
     protected $params = [];
+    
+    /**
+     * @var bool Is input valid data
+     */
     protected $isValid = true;
+    
+    /**
+     * @var array Of error messages
+     */
     protected $errors = [];
 
     public function __construct(App $app)
@@ -21,22 +36,40 @@ class Request extends AppAware
         }
     }
     
+    /**
+     * @return bool Is request valid
+     */
     public function getIsValid()
     {
         return $this->isValid;
     }
     
+    /**
+     * Set request valid state
+     * 
+     * @param bool $isValid
+     * @return \Request
+     */
     public function setIsValid($isValid)
     {
         $this->isValid = $isValid;
         return $this;
     }
 
+    /**
+     * @return array All error messges
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * Set errors messages
+     * 
+     * @param array $errors
+     * @return \Request
+     */
     public function setErrors(array $errors = [])
     {
         $this->errors = $errors;
@@ -44,28 +77,53 @@ class Request extends AppAware
         return $this;
     }
 
+    /**
+     * Add error message
+     * 
+     * @param string $message
+     * @return \Request
+     */
     public function addError($message)
     {
         $this->errors[] = $message;
         $this->setIsValid(false);
+        return $this;
     }
 
+    /**
+     * @return mixed Input data
+     */
     public function getInput()
     {
         return $this->input;
     }
 
+    /**
+     * Set input data
+     * 
+     * @param mixed $data
+     * @return \Request
+     */
     public function setInput($data)
     {
         $this->input = $data;
         return $this;
     }
 
+    /**
+     * @return array Request params
+     */
     public function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * Set request params
+     * 
+     * @param array $params
+     * @return \Request
+     */
     public function setParams($params)
     {
         $this->params = $params;

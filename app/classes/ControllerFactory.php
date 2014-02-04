@@ -1,6 +1,9 @@
 <?php
 class ControllerFactory extends AppAware
 {
+    /**
+     * @var array of controllers (lazy loading)
+     */
     protected $controllers = [];
     
     /**
