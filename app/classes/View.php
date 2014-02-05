@@ -57,9 +57,7 @@ class View extends AppAware
             $this->setData($data);
             ob_start();
             include $file_path;
-            $out = ob_get_contents();
-            ob_end_clean();
-            return $out;
+            return ob_get_clean();
         }
         throw new Exception("View '$this->templateName' not found", 500);
     }
